@@ -1,5 +1,6 @@
 ﻿using BillPaymentProject.objectControls;
 using System;
+using System.Collections.Generic;
 
 namespace BillPaymentProject.classobjects
 {
@@ -83,6 +84,34 @@ namespace BillPaymentProject.classobjects
                     return loginResult; // This is the RoleID
             }
         }
+
+        public string InitiateVendorPaymentTransaction(BillPaymnet transaction)
+        {
+            if (string.IsNullOrWhiteSpace(transaction.VendorCode) || string.IsNullOrWhiteSpace(transaction.ReferenceNumber))
+                throw new ArgumentException("Vendor code and reference are required.");
+
+            if (transaction.Amount <= 0)
+                throw new ArgumentException("Amount must be greater than 0.");
+
+            return _databaseHandler.InitiateVendorPaymentTransaction(transaction);
+        }
+        public string ValidateUtilityReference(BillPaymnet referenceInfo)
+        {
+            if (string.IsNullOrWhiteSpace(referenceInfo.VendorCode))
+                throw new ArgumentException("Vendor Code is required.");
+
+            if (string.IsNullOrWhiteSpace(referenceInfo.ReferenceNumber))
+                throw new ArgumentException("Reference Number is required.");
+
+            var result = _databaseHandler.ValidateUtilityReference(referenceInfo.VendorCode, referenceInfo.ReferenceNumber);
+
+            if (string.IsNullOrEmpty(result))
+                throw new KeyNotFoundException("Customer not found for the given reference.");
+
+            return result;
+        }
+
+
 
     }
 }

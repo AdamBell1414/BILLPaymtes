@@ -27,5 +27,24 @@ namespace BillPaymentProject.classobjects
                 return ApiResponse<int>.Fail("Error: " + ex.Message);
             }
         }
+
+
+        public static ApiResponse<string> Handle(Func<string> operation, string successMessage)
+        {
+            try
+            {
+                var result = operation();
+
+                if (!string.IsNullOrEmpty(result))
+                    return ApiResponse<string>.Ok(result, successMessage);
+                else
+                    return ApiResponse<string>.Fail("Operation failed or returned empty.");
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<string>.Fail("Error: " + ex.Message);
+            }
+        }
+
     }
 }
