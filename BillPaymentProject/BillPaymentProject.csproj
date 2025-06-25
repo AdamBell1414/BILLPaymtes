@@ -48,11 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="classobjects\ApiResponse.cs" />
+    <Compile Include="classobjects\BillPaymentBusinessLogic.cs" />
     <Compile Include="classobjects\DatabaseHandler.cs" />
+    <Compile Include="objectControls\ApiOperationHandler.cs" />
     <Compile Include="objectControls\BillPaymnet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

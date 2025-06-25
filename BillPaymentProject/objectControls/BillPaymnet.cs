@@ -22,6 +22,7 @@ namespace BillPaymentProject.objectControls
         public int? VendorID { get; set; }
         public string VendorName { get; set; }
         public string ContactEmail { get; set; }
+        public string VendorCode {  get; set; }
         public string ContactPhone { get; set; }
         public decimal? Balance { get; set; }
         public int? CreatedBy { get; set; }

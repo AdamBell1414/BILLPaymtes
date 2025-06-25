@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillPaymentProject", "BillPaymentProject\BillPaymentProject.csproj", "{3B128892-9442-4353-8F8A-FA6703712F18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillPaymentWebPortal", "BillPaymentWebPortal\BillPaymentWebPortal.csproj", "{2E8FFE0C-51D5-498E-8A44-7A40AD915BEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillPaymentApi", "BillPaymentApi\BillPaymentApi.csproj", "{961618CE-3B1B-4754-9097-C4DE1C378B9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,12 +23,16 @@ Global
 		{2E8FFE0C-51D5-498E-8A44-7A40AD915BEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E8FFE0C-51D5-498E-8A44-7A40AD915BEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E8FFE0C-51D5-498E-8A44-7A40AD915BEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961618CE-3B1B-4754-9097-C4DE1C378B9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961618CE-3B1B-4754-9097-C4DE1C378B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961618CE-3B1B-4754-9097-C4DE1C378B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961618CE-3B1B-4754-9097-C4DE1C378B9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
 		SolutionGuid = {3ED7C75B-3BF9-432E-A9FF-07B555566871}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

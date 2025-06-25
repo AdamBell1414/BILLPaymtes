@@ -57,3 +57,10 @@ C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPor
 C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\obj\Debug\BillPaym.52C61054.Up2Date
 C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\obj\Debug\BillPaymentWebPortal.dll
 C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\obj\Debug\BillPaymentWebPortal.pdb
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\BillPaymentProject.dll
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\BillPaymentProject.pdb
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\BillPaymentProject.dll.config
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\Microsoft.Practices.EnterpriseLibrary.Data.xml
+C:\Users\Adam Ssebatta\Desktop\All\practice\BillPaymentProject\BillPaymentWebPortal\bin\Microsoft.Practices.EnterpriseLibrary.Common.xml

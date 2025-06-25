@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BillPaymentProject.classobjects;
+using BillPaymentProject.objectControls;
+using System;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -15,33 +17,50 @@ namespace BillPaymentWebPortal
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string name = txtName.Text.Trim();
-            string phoneNumber = txtPhoneNumber.Text.Trim();
-            string countryCode = ddlCountryCode.SelectedValue;
-            string km = ddlKM.SelectedValue;
-
-
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(phoneNumber) || string.IsNullOrEmpty(countryCode) || string.IsNullOrEmpty(km))
+            try
             {
-                lblMessage.Text = "Please fill out all fields.";
-                lblMessage.ForeColor = System.Drawing.Color.Red;
+                var loginUser = new BillPaymnet
+                {
+                    Email = txtUsernameOrEmail.Text.Trim(),  // Could be email or username
+                    PasswordHash = txtPassword.Text.Trim()
+                };
+
+                var loginService = new BillPaymentBusinessLogic();
+                int result = loginService.LoginUsers(loginUser);
+
+                switch (result)
+                {
+                    case 1:
+                        Response.Redirect("~/AdminDashboard.aspx");
+                        break;
+                    case 2:
+                        Response.Redirect("~/UserDashboard.aspx");
+                        break;
+                    case 3:
+                        Response.Redirect("~/Vendor.aspx");
+                        break;
+
+                    case 4:
+                        Response.Redirect("~/Customer.aspx");
+                        break;
+                    default:
+                        lblMessage.Text = "Unknown role. Contact support.";
+                        break;
+                }
             }
-            else
+            catch (ArgumentException ex)
             {
-
-                string message = $"Thank you {name}! You have selected {km} for the payment. " +
-                                 $"We will contact you at {countryCode} {phoneNumber} shortly.";
-
-
-                lblMessage.Text = message;
-                lblMessage.ForeColor = System.Drawing.Color.Green;
-
-
-                txtName.Text = "";
-                txtPhoneNumber.Text = "";
-                ddlCountryCode.SelectedIndex = 0;
-                ddlKM.SelectedIndex = 0;
+                lblMessage.Text = $"Input Error: {ex.Message}";
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                lblMessage.Text = $"Login Denied: {ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = $"An error occurred: {ex.Message}";
             }
         }
+
     }
 }

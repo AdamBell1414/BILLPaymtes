@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Policy;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace BillPaymentProject.classobjects
         public DatabaseHandler()
         {
             DatabaseProviderFactory factory = new DatabaseProviderFactory();
-            db = factory.Create("BillPayment");
+            db = factory.Create("BillPayments");
 
         }
 
@@ -25,7 +27,7 @@ namespace BillPaymentProject.classobjects
         {
             try
             {
-                command = db.GetStoredProcCommand("sp_CreateUser", new object[]
+                command = db.GetStoredProcCommand("CreateUser", new object[]
                 {
 
                     createuser.UserID,
@@ -54,11 +56,12 @@ namespace BillPaymentProject.classobjects
         {
             try
             {
-                command = db.GetStoredProcCommand("sp_createUtility", new object[]
+                command = db.GetStoredProcCommand("CreateUtility", new object[]
                 {
 
                     createUtility.UtilityName,
                     createUtility.UtilityCode,
+                    createUtility.CreatedBy
 
                 });
                 DataSet ds = db.ExecuteDataSet(command);
@@ -76,19 +79,124 @@ namespace BillPaymentProject.classobjects
             }
         }
 
-        //public int Customer(BillPaymnet customer)
-        //{
-        //    try {
-        //        command = db.GetStoredProcCommand("SP_CreateCustomer", new object[] { 
-        //        customer.
+        public int CreateCustomer(BillPaymnet customer)
+        {
+            try
+            {
+                command = db.GetStoredProcCommand("sp_CreateCustomer", new object[] {
+                customer.ReferenceNumber,
+                customer.CustomerName,
+                 customer.Email,
+                customer.PhoneNumber,
+                customer.PasswordHash,
+                customer.UtilityCode,
+                customer.CreatedBy
+
+
+                });
+                DataSet ds = db.ExecuteDataSet(command);
+                int newId = Convert.ToInt32(ds.Tables[0].Rows[0]["CustomerId"]);
+
+                return newId;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return 0;
+
+            }
+        }
+
+        public int CreateVendor(BillPaymnet vendor)
+        {
+            try
+            {
+
+
+        command = db.GetStoredProcCommand("sp_CreateVendor", new object[] {
+
+   
+            vendor.VendorCode,
+            vendor.VendorName,
+            vendor.ContactEmail,
+            vendor.ContactPhone,
+            vendor.PasswordHash,
+            vendor.Balance,
+            vendor.CreatedBy
+           
+
+                });
+                DataSet ds = db.ExecuteDataSet(command);
+                int newId = Convert.ToInt32(ds.Tables[0].Rows[0]["CustomerId"]);
+
+                return newId;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return 0;
+
+            }
+        }
+
+
+        public int LoginUser(BillPaymnet loginuser)
+        {
+
+
+            try
+            {
+              
+                string usernameOrEmail = string.IsNullOrEmpty(loginuser.Email) ? loginuser.Username : loginuser.Email;
+
+                command = db.GetStoredProcCommand("sp_LoginUser", new object[]
+                {
+            usernameOrEmail,
+            loginuser.PasswordHash
+                });
+
+                DataSet ds = db.ExecuteDataSet(command);
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    DataTable dt = ds.Tables[0];
+
+                    if (dt.Rows.Count == 0)
+                    {
+                        
+                        return -1;
+                    }
+
+                    
+                    if (dt.Columns.Contains("ResultCode"))
+                    {
+                        return Convert.ToInt32(dt.Rows[0]["ResultCode"]);
+                    }
+                    else
+                    {
+                        
+                        int roleId = Convert.ToInt32(dt.Rows[0]["RoleID"]);
+
+                        return roleId; 
+                    }
+                }
+
+                return -1; 
+            }
+            catch (Exception ex)
+            {
                 
-        //        });
-            
-        //    }
-        //    catch (Exception ex) { 
-            
-        //    }
-        //}
+                Console.WriteLine("Login error: " + ex.Message);
+                return -99;
+            }
+
+        }
+
+
     }
 }
 

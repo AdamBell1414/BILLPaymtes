@@ -1,241 +1,136 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebPaymentLoginPage.aspx.cs" Inherits="BillPaymentWebPortal.WebPaymentLoginPage" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<head runat="server">
+    <title>Login - Elgon Payment Portal</title>
     <style>
-     /* General styles */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: url('/images/mountains.jpg') no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('/images/mountains.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-/* Welcome Title Styling */
-.welcome-title {
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: black; /* Make text black to ensure visibility */
-}
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(5px);
+        }
 
-/* Login card styling */
-.login-container {
-    background-color: rgba(255, 255, 255, 0.7); /* Reduced opacity for better readability */
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    backdrop-filter: blur(5px); /* Optional blur effect */
-}
+        .login-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #333;
+        }
 
-/* Form Elements */
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-.form-group {
-    margin-bottom: 20px;
-}
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
 
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #444;
-}
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-.form-group input[type="email"],
-.form-group input[type="password"],
-.form-group select,
-.form-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 5px;
-}
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #4facfe;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-/* Phone Container styling */
-.form-group .phone-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+        .btn-submit:hover {
+            background-color: #00c6fb;
+        }
 
-.form-group .country-code {
-    width: 30%;
-    margin-right: 5%;
-}
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: red;
+        }
 
-.form-group .phone-number {
-    width: 65%;
-}
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
 
-/* Submit Button Styling */
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    background-color: #4facfe;
-    border: none;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .remember-me input {
+            margin-right: 5px;
+        }
 
-.btn-submit:hover {
-    background-color: #00c6fb;
-}
-
-/* Message */
-.message {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
-    color: red;
-}
-
-/* Register Link */
-.register-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.register-link a {
-    color: #4facfe;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.register-link a:hover {
-    text-decoration: underline;
-}
-
-/* Responsive Styles */
-@media screen and (max-width: 768px) {
-    /* Increase font size of welcome title for small screens */
-    .welcome-title {
-        font-size: 28px;
-    }
-
-    /* Adjust the login-container to be slightly more opaque for better readability */
-    .login-container {
-        background-color: rgba(255, 255, 255, 0.8); /* More opaque for better visibility */
-        padding: 20px;
-        width: 90%;
-    }
-
-    /* Stack phone number and country code on smaller screens */
-    .form-group .phone-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .form-group .country-code,
-    .form-group .phone-number {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    /* Ensure text color is visible */
-    .form-group label,
-    .form-group input,
-    .btn-submit,
-    .welcome-title {
-        color: #333; /* Dark color for better readability */
-    }
-
-    .btn-submit {
-        font-size: 14px;
-        padding: 10px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    /* Further increase font size for smaller screens */
-    .welcome-title {
-        font-size: 24px;
-    }
-
-    /* Reduce padding on small screens */
-    .login-container {
-        padding: 15px;
-    }
-
-    .btn-submit {
-        font-size: 12px;
-        padding: 8px;
-    }
-}
-
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-      
-
         <div class="login-container">
-              <!-- Welcome Title -->
-  <div class="welcome-title">
-      Welcome to Elgon Payment Portal
-  </div>
-
-            <!-- KM Dropdown (instead of Race) -->
-            <div class="form-group">
-                <label><i class="fas fa-envelope"></i> Distance(Km)</label>
-                <asp:DropDownList ID="ddlKM" runat="server" CssClass="form-control" required>
-                    <asp:ListItem Text="Select KM" Value="" />
-                    <asp:ListItem Text="2 km" Value="2" />
-                    <asp:ListItem Text="5 km" Value="5" />
-                    <asp:ListItem Text="10 km" Value="10" />
-                    <asp:ListItem Text="25 km" Value="25" />
-                    <asp:ListItem Text="50 km" Value="50" />
-                    <asp:ListItem Text="100 km" Value="100" />
-                </asp:DropDownList>
+            <div class="login-title">
+                Welcome To Bill Paymets
             </div>
 
-            <!-- Name Field -->
+            <!-- Email/Username -->
             <div class="form-group">
-                <label><i class="fas fa-lock"></i> Name</label>
-                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" required />
+                <label for="txtUsernameOrEmail">Email or Username</label>
+                <asp:TextBox ID="txtUsernameOrEmail" runat="server" CssClass="form-control" placeholder="Enter Email or Username" />
             </div>
 
-            <!-- Phone Number with Country Code -->
+            <!-- Password -->
             <div class="form-group">
-                <label><i class="fas fa-phone"></i> Phone Number</label>
-                <div class="phone-container">
-                    <asp:DropDownList ID="ddlCountryCode" runat="server" CssClass="country-code" required>
-                        <asp:ListItem Text="Select Country Code" Value="" />
-                        <asp:ListItem Text="+256 (Uganda)" Value="+256" />
-                        <asp:ListItem Text="+1 (USA)" Value="+1" />
-                        <asp:ListItem Text="+44 (UK)" Value="+44" />
-                    </asp:DropDownList>
-                    <asp:TextBox ID="txtPhoneNumber" runat="server" CssClass="phone-number" required />
-                </div>
+                <label for="txtPassword">Password</label>
+                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control" placeholder="Enter Password" />
             </div>
 
-            <!-- Login Button -->
-            <asp:Button ID="btnLogin" runat="server" Text="PayNow" CssClass="btn-submit" OnClick="btnLogin_Click" />
+            <!-- Remember Me -->
+            <div class="remember-me">
+                <asp:CheckBox ID="chkRememberMe" runat="server" />
+                <label for="chkRememberMe">Remember Me</label>
+            </div>
 
-            <!-- Message Label -->
+            <!-- Submit Button -->
+            <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn-submit" OnClick="btnLogin_Click" />
+
+            <!-- Message -->
             <asp:Label ID="lblMessage" runat="server" CssClass="message" />
+
+            <!-- Optional Footer -->
+            <div class="footer">
+                &copy; 2025 Elgon Portal. All rights reserved.
+            </div>
         </div>
     </form>
 </body>
