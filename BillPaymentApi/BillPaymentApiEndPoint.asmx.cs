@@ -1,6 +1,8 @@
 ﻿using BillPaymentProject.classobjects;
 using BillPaymentProject.objectControls;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 using System.Web.Services;
 
 namespace BillPaymentApi
@@ -87,15 +89,51 @@ namespace BillPaymentApi
             return ApiOperationHandler.Handle(() => _logic.CreateVendor(vendor), "Vendor created successfully.");
         }
 
-        [WebMethod]
-        public ApiResponse<int> LoginUser(string username, string password) {
-
-            BillPaymnet loginUser = new BillPaymnet {
-            Username = username,
-            PasswordHash = password
+        [WebMethod(EnableSession = true)]
+        public ApiResponse<int> LoginUser(string username, string password)
+        {
+            BillPaymnet loginUser = new BillPaymnet
+            {
+                Username = username,
+                PasswordHash = password
             };
 
-            return ApiOperationHandler.Handle(()=> _logic.LoginUsers(loginUser), "Success Login");
+            var result = _logic.LoginUsers(loginUser);
+
+
+            return ApiOperationHandler.Handle(() => result, "Login successful.");
         }
+
+        [WebMethod]
+        public ApiResponse<string> ValidateReference(string vendorCode, string referenceNumber)
+        {
+            var input = new BillPaymnet
+            {
+                VendorCode = vendorCode,
+                ReferenceNumber = referenceNumber
+            };
+
+            return ApiOperationHandler.Handle(() => _logic.ValidateUtilityReference(input), "Reference validated successfully.");
+        }
+
+
+
+        [WebMethod]
+        public ApiResponse<string> InitiateVendorPayment(string vendorCode, string referenceNumber, string utilityCode, decimal amount, int vendorUserID)
+        {
+            var bill = new BillPaymnet
+            {
+                VendorCode = vendorCode,
+                ReferenceNumber = referenceNumber,
+                UtilityCode = utilityCode,
+                Amount = amount,
+                CreatedBy = vendorUserID
+            };
+
+            return ApiOperationHandler.Handle(() => _logic.InitiateVendorPaymentTransaction(bill), "Transaction initiated successfully.");
+        }
+
+
+
     }
 }

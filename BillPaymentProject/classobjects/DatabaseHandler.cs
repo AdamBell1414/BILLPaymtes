@@ -115,9 +115,9 @@ namespace BillPaymentProject.classobjects
             {
 
 
-        command = db.GetStoredProcCommand("sp_CreateVendor", new object[] {
+                command = db.GetStoredProcCommand("sp_CreateVendor", new object[] {
 
-   
+
             vendor.VendorCode,
             vendor.VendorName,
             vendor.ContactEmail,
@@ -125,7 +125,7 @@ namespace BillPaymentProject.classobjects
             vendor.PasswordHash,
             vendor.Balance,
             vendor.CreatedBy
-           
+
 
                 });
                 DataSet ds = db.ExecuteDataSet(command);
@@ -150,7 +150,7 @@ namespace BillPaymentProject.classobjects
 
             try
             {
-              
+
                 string usernameOrEmail = string.IsNullOrEmpty(loginuser.Email) ? loginuser.Username : loginuser.Email;
 
                 command = db.GetStoredProcCommand("sp_LoginUser", new object[]
@@ -167,34 +167,90 @@ namespace BillPaymentProject.classobjects
 
                     if (dt.Rows.Count == 0)
                     {
-                        
+
                         return -1;
                     }
 
-                    
+
                     if (dt.Columns.Contains("ResultCode"))
                     {
                         return Convert.ToInt32(dt.Rows[0]["ResultCode"]);
                     }
                     else
                     {
-                        
+
                         int roleId = Convert.ToInt32(dt.Rows[0]["RoleID"]);
 
-                        return roleId; 
+                        return roleId;
                     }
                 }
 
-                return -1; 
+                return -1;
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine("Login error: " + ex.Message);
                 return -99;
             }
 
         }
+
+        public string ValidateUtilityReference(string vendorCode, string referenceNumber)
+        {
+            try
+            {
+                command = db.GetStoredProcCommand("sp_ValidateUtilityReference", new object[]
+                {
+            vendorCode,
+            referenceNumber
+                });
+
+                DataSet ds = db.ExecuteDataSet(command);
+
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataRow row = ds.Tables[0].Rows[0];
+
+                    // Return plain string format or JSON-like string
+                    return $"Customer: {row["CustomerName"]}, Email: {row["Email"]}, Phone: {row["Phone"]}, UtilityID: {row["UtilityID"]}";
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public string InitiateVendorPaymentTransaction(BillPaymnet bill)
+        {
+            try
+            {
+                command = db.GetStoredProcCommand("InitiateVendorPaymentTransaction", new object[]
+                {
+            bill.VendorCode,
+            bill.ReferenceNumber,     // CustomerReference
+            bill.UtilityCode,
+            bill.Amount,
+            bill.CreatedBy            // VendorUserID
+                });
+
+                DataSet ds = db.ExecuteDataSet(command);
+
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    string transactionId = ds.Tables[0].Rows[0]["TransactionID"].ToString();
+                    return transactionId;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
 
 
     }
