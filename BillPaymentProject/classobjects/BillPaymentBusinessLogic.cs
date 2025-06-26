@@ -1,6 +1,7 @@
 ﻿using BillPaymentProject.objectControls;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace BillPaymentProject.classobjects
 {
@@ -110,6 +111,63 @@ namespace BillPaymentProject.classobjects
 
             return result;
         }
+
+
+        public  List<BillPaymnet> GetPendingTransactions()
+        {
+            
+
+            
+            DataTable dt = _databaseHandler.GetAllPendingTransaction();
+
+            List<BillPaymnet> transactionList = new List<BillPaymnet>();
+
+            
+            foreach (DataRow dr in dt.Rows)
+            {
+                BillPaymnet transaction = new BillPaymnet
+                {
+                    TransactionID = Guid.Parse(dr["TransactionID"].ToString()), 
+                    VendorID = Convert.ToInt32(dr["VendorID"]),
+                    CustomerID = Convert.ToInt32(dr["CustomerID"]),
+                    UtilityID = Convert.ToInt32(dr["UtilityID"]),
+                    ReferenceNumber = dr["ReferenceNumber"].ToString(),
+                    Amount = Convert.ToDecimal(dr["Amount"]),
+                    UtilityToken = dr["UtilityToken"].ToString(),
+                    UtilityReceiptNo = dr["UtilityReceiptNo"].ToString(),
+                 
+                };
+
+                transactionList.Add(transaction);
+            }
+
+            return transactionList;
+        }
+        public ApiResponse<string> UpdateUtilityTransactionResult(BillPaymnet bill)
+        {
+            try
+            {
+                _databaseHandler.UpdateUtilityTransactionResult(
+                    (Guid)bill.TransactionID,
+                    bill.UtilityToken,
+                    bill.UtilityReceiptNo,
+                    bill.Status
+                );
+
+                return new ApiResponse<string> { Success = true, Data = bill.TransactionID.ToString() };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<string> { Success = false, Message = ex.Message };
+            }
+        }
+
+
+        public void UpdateUtilityTransactionResult(Guid? transactionID, string utilityToken, string receiptNo, string status)
+        {
+            throw new NotImplementedException();
+        }
+
 
 
 

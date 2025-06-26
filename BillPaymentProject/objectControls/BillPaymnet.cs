@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace BillPaymentProject.objectControls
 {
-  public class BillPaymnet
-    {
 
+    [Serializable]
+    public class BillPaymnet
+    {
+       
         public int? UserID { get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
@@ -17,8 +19,11 @@ namespace BillPaymentProject.objectControls
         public string Role { get; set; } // SuperAdmin, VendorAdmin, Custome
         public bool? IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string UtilityToken { get; set; }
+        public string UtilityReceiptNo { get; set; }
 
-       
+
+
         public int? VendorID { get; set; }
         public string VendorName { get; set; }
         public string ContactEmail { get; set; }
@@ -39,8 +44,15 @@ namespace BillPaymentProject.objectControls
         public string ReferenceNumber { get; set; }
         public string CustomerName { get; set; }
         public decimal? AccountBalance { get; set; }
+    
+          public decimal               TotalPaymentsMade { get; set; }
+         public int    FailedPayments {  get; set; }
+          public int TotalTransactions {  get; set; }
 
+        public int CustomersWorked {  get; set; }
         
+
+
         public Guid? TransactionID { get; set; }
         public decimal? Amount { get; set; }
         public string Status { get; set; }

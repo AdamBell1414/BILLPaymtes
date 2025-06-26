@@ -1,6 +1,7 @@
 ﻿using BillPaymentProject.classobjects;
 using BillPaymentProject.objectControls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using System.Web.Services;
@@ -131,6 +132,46 @@ namespace BillPaymentApi
             };
 
             return ApiOperationHandler.Handle(() => _logic.InitiateVendorPaymentTransaction(bill), "Transaction initiated successfully.");
+        }
+
+        [WebMethod]
+        public ApiResponse<List<BillPaymnet>> GetPendingTransactions()
+        {
+            
+            return ApiOperationHandler.Handle(() => _logic.GetPendingTransactions(), "Fetched pending transactions successfully.");
+        }
+
+        [WebMethod]
+        public ApiResponse<string> UpdateUtilityTransactionResult(BillPaymnet bill)
+        {
+            return ApiOperationHandler.Handle(() =>
+            {
+                _logic.UpdateUtilityTransactionResult(bill);
+                return "Success";
+            }, "Transaction updated successfully.");
+        }
+
+
+        [WebMethod]
+        public ApiResponse<BillPaymnet> GetVendorDashboardInfo(int userId)
+        {
+            return ApiOperationHandler.Handle(() =>
+            {
+                DatabaseHandler loged = new DatabaseHandler();
+                BillPaymnet vendorDashboard = loged.GetVendorDashboardSummary(userId);
+                return vendorDashboard;
+            }, "Fetched vendor dashboard info successfully.");
+        }
+
+        [WebMethod]
+        public ApiResponse<BillPaymnet> GetVendersCustomerInformation()
+        {
+            return ApiOperationHandler.Handle(() =>
+            {
+                DatabaseHandler loged = new DatabaseHandler();
+                BillPaymnet vendorDashboard = loged.GetCustomerandVendorInfor();
+                return vendorDashboard;
+            }, "Fetched vendor dashboard info successfully.");
         }
 
 

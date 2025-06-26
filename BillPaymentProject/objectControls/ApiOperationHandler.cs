@@ -28,7 +28,23 @@ namespace BillPaymentProject.classobjects
             }
         }
 
+        // Generic handler to support any return type, including List<BillPaymnet>
+        public static ApiResponse<T> Handle<T>(Func<T> operation, string successMessage)
+        {
+            try
+            {
+                T result = operation();
 
+                if (result != null)  // Check for non-null results
+                    return ApiResponse<T>.Ok(result, successMessage);
+                else
+                    return ApiResponse<T>.Fail("Operation failed or returned null.");
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<T>.Fail("Error: " + ex.Message);
+            }
+        }
         public static ApiResponse<string> Handle(Func<string> operation, string successMessage)
         {
             try

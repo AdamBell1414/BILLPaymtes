@@ -1,5 +1,6 @@
 ﻿using BillPaymentProject.objectControls;
 using Microsoft.Practices.EnterpriseLibrary.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -200,7 +201,7 @@ namespace BillPaymentProject.classobjects
         {
             try
             {
-                command = db.GetStoredProcCommand("sp_ValidateUtilityReference", new object[]
+                command = db.GetStoredProcCommand("sp_GetCustomerInfoByReference", new object[]
                 {
             vendorCode,
             referenceNumber
@@ -210,10 +211,16 @@ namespace BillPaymentProject.classobjects
 
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    DataRow row = ds.Tables[0].Rows[0];
-
-                    // Return plain string format or JSON-like string
-                    return $"Customer: {row["CustomerName"]}, Email: {row["Email"]}, Phone: {row["Phone"]}, UtilityID: {row["UtilityID"]}";
+                    var row = ds.Tables[0].Rows[0];
+                    var customerInfo = new
+                    {
+                        CustomerName = row["CustomerName"].ToString(),
+                        Email = row["Email"].ToString(),
+                        Phone = row["Phone"].ToString(),
+                        UtilityID = row["UtilityID"].ToString(),
+                        UtilityCode = row["UtilityCode"].ToString(),
+                    };
+                    return JsonConvert.SerializeObject(customerInfo); // <== Easier to parse on front end
                 }
                 return null;
             }
@@ -222,6 +229,7 @@ namespace BillPaymentProject.classobjects
                 return null;
             }
         }
+
         public string InitiateVendorPaymentTransaction(BillPaymnet bill)
         {
             try
@@ -250,6 +258,121 @@ namespace BillPaymentProject.classobjects
                 return null;
             }
         }
+
+
+
+        public DataTable GetAllPendingTransaction()
+        {
+            command = db.GetStoredProcCommand("sp_GetPendingTransactionsForUtility");
+            DataTable dt = db.ExecuteDataSet(command).Tables[0];
+
+            return dt;
+        }
+
+
+        public void UpdateUtilityTransactionResult(Guid transactionID, string utilityToken, string utilityReceiptNo, string status)
+        {
+            try
+            {
+                command = db.GetStoredProcCommand(
+                    "sp_UpdateUtilityTransactionResult",
+                    transactionID,
+                    utilityToken,
+                    utilityReceiptNo,
+                    status
+                );
+
+                db.ExecuteNonQuery(command);
+            }
+            catch (Exception ex)
+            {
+                // Log exception properly
+                Console.WriteLine("Error updating transaction result: " + ex.Message);
+            }
+        }
+
+
+        public BillPaymnet GetVendorDashboardSummary(int userId)
+        {
+            try
+            {
+                command = db.GetStoredProcCommand("sp_GetVendorDashboardSummaryByUser", userId);
+                DataSet ds = db.ExecuteDataSet(command);
+
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataRow row = ds.Tables[0].Rows[0];
+
+                    return new BillPaymnet
+                    {
+                        VendorName = row["VendorName"].ToString(),
+                        AccountBalance = Convert.ToDecimal(row["AccountBalance"]),
+                        CustomersWorked = Convert.ToInt32(row["CustomersWorked"]),
+                        TotalPaymentsMade = Convert.ToDecimal(row["TotalPaymentsMade"]),
+                        FailedPayments = Convert.ToInt32(row["FailedPayments"]),
+                        TotalTransactions = Convert.ToInt32(row["TotalTransactions"])
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Dashboard fetch error: " + ex.Message);
+                return null;
+            }
+        }
+
+
+
+        public BillPaymnet GetCustomerandVendorInfor()
+        {
+            try
+            {
+                command = db.GetStoredProcCommand("sp_GetCompletedTransactionsForEmailNotification");
+                DataSet ds = db.ExecuteDataSet(command);
+
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataRow row = ds.Tables[0].Rows[0];
+
+                    return new BillPaymnet
+                    {
+                        TransactionID = row["TransactionID"] != DBNull.Value
+                            ? (Guid?)Guid.Parse(row["TransactionID"].ToString())
+                            : null,
+
+                        VendorName = row["VendorName"]?.ToString(),
+                        ContactEmail = row["VendorEmail"]?.ToString(), 
+
+                        CustomerName = row["CustomerName"]?.ToString(),
+                        Email = row["CustomerEmail"]?.ToString(),       
+
+                        ReferenceNumber = row["ReferenceNumber"]?.ToString(),
+                        Amount = row["Amount"] != DBNull.Value
+                            ? Convert.ToDecimal(row["Amount"])
+                            : 0,
+
+                        UtilityToken = row["UtilityToken"]?.ToString(),
+                        UtilityReceiptNo = row["UtilityReceiptNo"]?.ToString(),
+
+                        ProcessedAt = row["ProcessedAt"] != DBNull.Value
+                            ? Convert.ToDateTime(row["ProcessedAt"])
+                            : (DateTime?)null
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error fetching vendor/customer info: " + ex.Message);
+                return null;
+            }
+        }
+
+
+
 
 
 
